@@ -1,0 +1,27 @@
+import sympy
+from einsteinpy.symbolic import MetricTensor, ChristoffelSymbols, RicciTensor
+
+t, r, theta, phi, a = sympy.symbols('t r theta phi a')
+
+# Choose one of the following options:
+# Option 1: Use a custom metric
+metric_matrix = sympy.diag(-1, 1, (r**2 + a**2), (r**2 + a**2) * sympy.sin(theta)**2)
+
+# Option 2: Use the EllisMetric (uncomment the line below)
+# from einsteinpy.symbolic.predefined import EllisMetric
+# metric_matrix = EllisMetric()
+
+# Create a MetricTensor object
+metric = MetricTensor(metric_matrix, [t, r, theta, phi])
+
+# Compute the Christoffel symbols
+christoffel_symbols = ChristoffelSymbols.from_metric(metric)
+
+# Compute the Ricci tensor
+ricci_tensor = RicciTensor.from_christoffels(christoffel_symbols)
+
+# Display the Ricci tensor components
+print("Ricci Tensor Components:")
+for i in range(4):
+    for j in range(4):
+        print(f"R_{i}{j} =", ricci_tensor[i, j].simplify())
